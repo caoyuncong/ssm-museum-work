@@ -8,6 +8,6 @@
         <h1>Work INDEX</h1>
         <p><a href="${ctx}/work/add.jsp">ADD</a></p>
         <p><a href="${ctx}/work/queryAll">LIST</a></p>
-        <p><a href="${ctx/work/queryWorks}">作品->博物馆</a></p>
+        <p><a href="${ctx}/work/queryWorks">作品->博物馆</a></p>
     </body>
 </html>

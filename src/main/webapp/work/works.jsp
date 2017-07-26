@@ -33,7 +33,7 @@
     </c:forEach>
 </table>
 <c:import url="${ctx}/commons/page.jsp">
-    <c:param name="path" value="museum/${sessionScope.pagination.statement}"/>
+    <c:param name="path" value="work/${sessionScope.pagination.statement}"/>
 </c:import>
 </body>
 </html>

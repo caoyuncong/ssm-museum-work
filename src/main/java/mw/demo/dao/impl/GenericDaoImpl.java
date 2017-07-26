@@ -62,7 +62,7 @@ public class GenericDaoImpl<T extends Serializable, ID extends Number> implement
     }
 
     @Override
-    public T query(String statement, Object parameter) {
+    public T queryOne(String statement, Object parameter) {
         return sqlSession.selectOne(getStatement(statement), parameter);
     }
 
@@ -72,21 +72,31 @@ public class GenericDaoImpl<T extends Serializable, ID extends Number> implement
     }
 
     @Override
+    public List<T> queryList(String statement, Object parameter) {
+        return sqlSession.selectList(getStatement(statement),parameter);
+    }
+
+    @Override
+    public List<T> queryAll() {
+        return sqlSession.selectList(getStatement("queryAll"));
+    }
+
+    @Override
     public Pagination<T> query(String statement, Object parameter, int currentPage) {
         return getPagination(statement, parameter, currentPage);
     }
 
     @Override
     public Pagination<T> queryAll(int currentPage) {
-        return getPagination(getStatement("queryAll"), null, currentPage);
+        return getPagination("queryAll", null, currentPage);
     }
 
     private Pagination<T> getPagination(String statement, Object parameter, int currentPage) {
         int pageSize = Constant.PAGE_SIZE;
-        int totalRows = sqlSession.selectList(statement, parameter).size();
+        int totalRows = sqlSession.selectList(getStatement(statement), parameter).size();
         int totalPages = (int) (Math.ceil(totalRows / (double) pageSize));
         RowBounds rowBounds = new RowBounds(pageSize * (currentPage - 1), pageSize);
-        List<T> list = sqlSession.selectList(statement, parameter, rowBounds);
+        List<T> list = sqlSession.selectList(getStatement(statement), parameter, rowBounds);
         return new Pagination<>(list, statement, pageSize, totalRows, totalPages, currentPage);
     }
 }

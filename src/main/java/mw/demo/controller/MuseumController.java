@@ -1,5 +1,8 @@
 package mw.demo.controller;
 
+import mw.demo.model.Work;
+import mw.demo.service.WorkService;
+import mw.demo.util.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -7,15 +10,19 @@ import org.springframework.web.bind.annotation.*;
 import mw.demo.model.Museum;
 import mw.demo.service.MuseumService;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("museum")
 public class MuseumController extends BaseController {
 
     private final MuseumService museumService;
+    private final WorkService workService;
 
     @Autowired
-    public MuseumController(MuseumService museumService) {
+    public MuseumController(MuseumService museumService,WorkService workService) {
         this.museumService = museumService;
+        this.workService = workService;
     }
 
     @RequestMapping("create")
@@ -55,7 +62,13 @@ public class MuseumController extends BaseController {
 
     @RequestMapping("queryMuseums/{currentPage}")
     private String queryMuseums(@PathVariable int currentPage) {
-        session.setAttribute("pagination", museumService.query("wqueryMuseums", null, currentPage));
+        Pagination<Museum> pagination = museumService.query("queryMuseums", null, currentPage);
+        for (int i = 0; i < pagination.getList().size(); i++) {
+            int museumId = pagination.getList().get(i).getId();
+            List<Work> works = workService.queryList("queryWorksByMuseumId", museumId);
+            pagination.getList().get(i).setWorks(works);
+        }
+        session.setAttribute("pagination", pagination);
         return "redirect:/museum/museums.jsp";
     }
 
