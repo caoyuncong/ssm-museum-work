@@ -1,11 +1,17 @@
 package mw.demo.controller;
 
+import mw.demo.util.Constant;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import mw.demo.model.Work;
 import mw.demo.service.WorkService;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("work")
@@ -18,8 +24,22 @@ public class WorkController extends BaseController {
         this.workService = workService;
     }
 
+    private static String getPhotoFileName() {
+        return Long.toString(System.nanoTime());
+    }
     @RequestMapping("create")
-    private String create(Work work) {
+
+    private String create(Work work, @RequestParam MultipartFile pictureFile) {
+        String photoPath = application.getRealPath(Constant.UPLOAD_PHOTO_PATH);
+        String photoFileName = getPhotoFileName();
+        String originalFileName = pictureFile.getOriginalFilename();
+        String excName = FilenameUtils.getExtension(originalFileName);
+        try{
+            pictureFile.transferTo(new File(photoPath, photoFileName.concat("." + excName)));
+            work.setPicture(photoFileName.concat("."+excName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         workService.create(work);
         return "redirect:/work/queryAll";
     }

@@ -26,12 +26,12 @@
             <tr>
                 <td>${vs.count}</td>
                 <td>${work.title}</td>
-                <td>${work.picture}</td>
+                <td><a href="${ctx}/assets/photo/${work.picture}" target="_blank"><img src="${ctx}/assets/photo/${work.picture}" alt="${work.picture}" height="100"></a></td>
                 <td>${work.artist}</td>
                 <td>${work.year}</td>
                 <td>${work.museumId}</td>
                 <td><a href="${ctx}/work/queryById/${work.id}">EDIT</a></td>
-                <td><a class="delete" href="${ctx }/work/remove/${work.id}" onclick="return del()">REMOVE</a></td>
+                <td><a class="delete" href="${ctx}/work/remove/${work.id}" onclick="return del()">REMOVE</a></td>
             </tr>
             </c:forEach>
         </table>
