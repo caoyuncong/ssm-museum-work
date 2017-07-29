@@ -2,6 +2,8 @@ package mw.demo.controller;
 
 import mw.demo.model.Work;
 import mw.demo.service.WorkService;
+import mw.demo.util.Constant;
+import mw.demo.util.FileUpload;
 import mw.demo.util.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import mw.demo.model.Museum;
 import mw.demo.service.MuseumService;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,7 +29,10 @@ public class MuseumController extends BaseController {
     }
 
     @RequestMapping("create")
-    private String create(Museum museum) {
+    private String create(Museum museum, @RequestParam MultipartFile logoFile, @RequestParam MultipartFile pictureFIle) {
+        String photoPath = application.getRealPath(Constant.UPLOAD_PHOTO_PATH);
+        museum.setLogo(FileUpload.upload(photoPath,logoFile));
+        museum.setPicture(FileUpload.upload(photoPath,pictureFIle));
         museumService.create(museum);
         return "redirect:/museum/queryAll";
     }

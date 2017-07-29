@@ -13,6 +13,7 @@
 </head>
 <body>
 <table border="1">
+    <h1>${sessionScope.pagination.list}</h1>
     <tr>
         <th>COUNT</th>
         <th>NAME</th>

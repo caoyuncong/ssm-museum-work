@@ -25,8 +25,8 @@
             <tr>
                 <td>${vs.count}</td>
                 <td>${museum.name}</td>
-                <td>${museum.logo}</td>
-                <td>${museum.picture}</td>
+                <td><a href="${ctx}/assets/photo/${museum.logo}" target="_blank"><img src="${ctx}/assets/photo/${museum.logo}" width="100"></a></td>
+                <td><a href="${ctx}/assets/photo/${museum.picture}" target="_blank"><img src="${ctx}/assets/photo/${museum.picture}" width="100"></a></td>
                 <td>${museum.address}</td>
                 <td><a href="${ctx}/museum/queryById/${museum.id}">EDIT</a></td>
                 <td><a class="delete" href="${ctx }/museum/remove/${museum.id}" onclick="return del()">REMOVE</a></td>

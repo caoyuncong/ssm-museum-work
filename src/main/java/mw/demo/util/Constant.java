@@ -7,5 +7,5 @@ package mw.demo.util;
  */
 public interface Constant {
     int PAGE_SIZE = 1;
-    String UPLOAD_PHOTO_PATH = "assets/photo";
+    String UPLOAD_PHOTO_PATH = "/assets/photo";
 }

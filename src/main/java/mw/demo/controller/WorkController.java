@@ -1,6 +1,8 @@
 package mw.demo.controller;
 
+import mw.demo.model.Museum;
 import mw.demo.util.Constant;
+import mw.demo.util.FileUpload;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("work")
@@ -24,22 +28,22 @@ public class WorkController extends BaseController {
         this.workService = workService;
     }
 
-    private static String getPhotoFileName() {
-        return Long.toString(System.nanoTime());
+    @RequestMapping("json")
+    @ResponseBody
+    private List<Work> test() {
+        List<Work> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Museum museum = new Museum(i, "name...", "logo.png", "picture.jpg", "address...", null);
+            Work work = new Work(i, "title...", "picture.jpg", "artist...", 1900, 1, museum);
+            list.add(work);
+        }
+        return list;
     }
     @RequestMapping("create")
-
     private String create(Work work, @RequestParam MultipartFile pictureFile) {
+        System.out.println(pictureFile.getOriginalFilename());
         String photoPath = application.getRealPath(Constant.UPLOAD_PHOTO_PATH);
-        String photoFileName = getPhotoFileName();
-        String originalFileName = pictureFile.getOriginalFilename();
-        String excName = FilenameUtils.getExtension(originalFileName);
-        try{
-            pictureFile.transferTo(new File(photoPath, photoFileName.concat("." + excName)));
-            work.setPicture(photoFileName.concat("."+excName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        work.setPicture(FileUpload.upload(photoPath,pictureFile));
         workService.create(work);
         return "redirect:/work/queryAll";
     }
@@ -51,7 +55,11 @@ public class WorkController extends BaseController {
     }
 
     @RequestMapping("modify")
-    private String modify(Work work) {
+    private String modify(Work work, @RequestParam MultipartFile pictureFIle) {
+        if (!pictureFIle.isEmpty()) {
+            String photoPath = application.getRealPath(Constant.UPLOAD_PHOTO_PATH);
+            work.setPicture(FileUpload.upload(photoPath,pictureFIle));
+        }
         workService.modify(work);
         return "redirect:/work/queryAll";
     }
